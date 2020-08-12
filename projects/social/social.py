@@ -1,6 +1,23 @@
 from random import shuffle
 
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self, value):
+        self.queue.append(value)
+
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.queue)
+
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -80,7 +97,28 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        q = Queue()
+
+        # enqueue id
+        q.enqueue([user_id])
+
+        while q.size():
+            # dequeue the path
+            path = q.dequeue()
+            # store last vertex in path
+            node = path[-1]
+
+            # add to visited
+            if node not in visited:
+                visited[node] = path
+
+                # get friends
+                friends = self.friendships[node]
+
+                # loop over friends, enqueue path to each friend
+                for friend in friends:
+                    q.enqueue(path + [friend])
+
         return visited
 
 
