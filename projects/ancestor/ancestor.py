@@ -1,5 +1,4 @@
 from stack import Stack
-from collections import defaultdict
 
 
 def dfs(starting_vertex, g):
