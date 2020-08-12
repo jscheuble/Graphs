@@ -2,8 +2,6 @@ from stack import Stack
 
 
 def dfs(starting_vertex, g):
-    if starting_vertex not in g:
-        return []
 
     stack = Stack()
     stack.push([starting_vertex])
