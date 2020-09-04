@@ -1,6 +1,27 @@
+from random import shuffle
+
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self, value):
+        self.queue.append(value)
+
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.queue)
+
+
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -45,8 +66,26 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(0, num_users):
+            self.add_user(f'User {i}')
 
         # Create friendships
+        poss_friendships = []
+
+        # avoid duplicates
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                poss_friendships.append((user_id, friend_id))
+
+        # shuffle
+        shuffle(poss_friendships)
+
+        # create friendships for n pairs in list
+        N = num_users * avg_friendships // 2
+        for i in range(N):
+            friendship = poss_friendships[i]
+            user_id, friend_id = friendship
+            self.add_friendship(user_id, friend_id)
 
     def get_all_social_paths(self, user_id):
         """
@@ -58,7 +97,28 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        q = Queue()
+
+        # enqueue id
+        q.enqueue([user_id])
+
+        while q.size():
+            # dequeue the path
+            path = q.dequeue()
+            # store last vertex in path
+            node = path[-1]
+
+            # add to visited
+            if node not in visited:
+                visited[node] = path
+
+                # get friends
+                friends = self.friendships[node]
+
+                # loop over friends, enqueue path to each friend
+                for friend in friends:
+                    q.enqueue(path + [friend])
+
         return visited
 
 
